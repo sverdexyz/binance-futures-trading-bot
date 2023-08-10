@@ -823,27 +823,23 @@ def cancel_extra_open_order(contract_symbol: str, strategy_id: int) -> int:
     return SUCCESSFUL
 
 
-def is_it_time_to_open_long_position(strategy_id: int, current_time: datetime) -> bool:
-    if strategy_id == 0:
-        return is_bot_started and is_price_increasing and not last_is_price_increasing
-    if strategy_id == 1:
-        return is_bot_started and is_price_increasing and not last_is_price_increasing
-    if strategy_id == 2:
-        return is_bot_started and is_macd_increasing and not last_is_macd_increasing
-    if strategy_id == 3:
-        return is_bot_started and is_macd_increasing and not last_is_macd_increasing
+# modified
+def is_it_time_to_open_long_position(i: int, current_time: datetime) -> bool:
+    order_info = read_emails_from_gmail()
+    if order_info and order_info['opening_side'] == 'BUY':
+        print('A long position order was opened at', order_info['timestamp'])
+        return True
+    # adjust the following line to your logic
     return False
 
 
-def is_it_time_to_open_short_position(strategy_id: int, current_time: datetime) -> bool:
-    if strategy_id == 0:
-        return is_bot_started and is_price_decreasing and not last_is_price_decreasing
-    if strategy_id == 1:
-        return is_bot_started and is_price_decreasing and not last_is_price_decreasing
-    if strategy_id == 2:
-        return is_bot_started and is_macd_decreasing and not last_is_macd_decreasing
-    if strategy_id == 3:
-        return is_bot_started and is_macd_decreasing and not last_is_macd_decreasing
+# modified
+def is_it_time_to_open_short_position(i: int, current_time: datetime) -> bool: 
+    order_info = read_emails_from_gmail()
+    if order_info and order_info['closing_side'] == 'SELL':
+        print('A short position order was closed at', order_info['timestamp'])
+        return True
+    # adjust the following line to your logic
     return False
 
 
